@@ -54,7 +54,7 @@ console.log(ourdata)
     var yaxismax;
     
     xaxismin = d3.min(ourdata, function(data) {
-return data.healthcare;
+        return data.healthcare;
     });
     
     xaxismax = d3.max(ourdata, function(data) {
@@ -74,4 +74,69 @@ return data.healthcare;
     console.log(xaxismin);
     console.log(yaxismax);
 
+    // Append axes
+    chartGroup
+    .append("g")
+    .attr("transform", `translate(0, ${height})`)
+    .call(xaxis);
 
+    chartGroup
+    .append("g")
+    .call(yaxis);
+
+    var circlesGroup = chartGroup.selectAll("circle")
+    .data(ourdata).enter().append("circle")
+    .attr("cx", d => xLinearScale(d.healthcare +1.5))
+    .attr("cy", d => yLinearScale(d.poverty +0.3))
+    .attr("r", "12")
+    .attr("fill", "blue")
+    .attr("opacity", .5)
+    .on("mouseout", function(data, index) {
+      toolTip.hide(data);
+    });
+
+    // Make the tooltip
+    var toolTip = d3.tip().attr("class", "tooltip")
+    .offset([80, -60])
+    .html(function(d) {
+      return (abbr + '%');
+      });
+    chartGroup.call(toolTip);
+
+    circlesGroup.on("click", function(data) {
+        toolTip.show(data);
+      })
+        // onmouseout event
+        .on("mouseout", function(data, index) {
+          toolTip.hide(data);
+        });
+    // axes labels
+    chartGroup.append("text")
+    .style("font-size", "12px")
+    .selectAll("tspan")
+    .data(ourdata)
+    .enter()
+    .append("tspan")
+        .attr("x", function(data) {
+            return xLinearScale(data.healthcare +1.3);
+        })
+        .attr("y", function(data) {
+            return yLinearScale(data.poverty +.1);
+        })
+        .text(function(data) {
+            return data.abbr
+        });
+
+    chartGroup.append("text")
+    .attr("transform", "rotate(-90)")
+    .attr("y", 0 - margin.left + 40)
+    .attr("x", 0 - (height / 2))
+    .attr("dy", "1em")
+    .attr("class", "axisText")
+    .text("Lacks Healtcare(%)");
+
+    chartGroup.append("g")
+    .attr("transform", `translate(${width / 2}, ${height + margin.top + 30})`)
+    .attr("class", "axisText")
+    .text("In Poverty (%)");
+});
