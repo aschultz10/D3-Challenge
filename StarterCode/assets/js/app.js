@@ -16,7 +16,7 @@ var chartWidth = width - margin.left - margin.right;
 
 // create svg container
 var svg = d3
-    .select(".scatter")
+    .select("#scatter")
     .append("svg")
     .attr("height", height)
     .attr("width", width);
@@ -27,43 +27,23 @@ var chartGroup = svg.append("g")
 
 
 // Retrieve data from the CSV file and execute everything below
-d3.csv("data.csv", function(data) {
-    for (var i = 0; i < data.length; i++) {
-        console.log(data[i].poverty);
-        console.log(data[i].healthcare);
+d3.csv("data.csv", function(usedata) {
 
     // parse data
-    data.forEach(d => {
-      d.poverty = +d.poverty;
-      d.healthcare = +d.healthcare;
+    usedata.forEach(function(data) {
+      data.poverty = +data.poverty;
+      data.healthcare = +data.healthcare;
     });
-  
-    function xMinMax() {
-        xMin = d3.min(data, function(d) {
-          return parseFloat(d[curX]) * 0.90;});
-        xMax = d3.max(data, function(d) {
-          return parseFloat(d[curX]) * 1.10;});
-    }
-    function yMinMax() {
-        yMin = d3.min(data, function(d) {
-          return parseFloat(d[curY]) * 0.90; });
-        yMax = d3.max(data, function(d) {
-          return parseFloat(d[curY]) * 1.10;
-        });
-    }
-
-    xMinMax();
-    yMinMax();
 
         // xLinearScale function above csv import
     var xLinearScale = d3
     .scaleLinear()
-    .domain([xMin, xMax])
+    .domain([d3.extent(usedata)])
     .range([margin + labelArea, width - margin]);
     
     var yLinearScale = d3
     .scaleLinear()
-    .domain([yMin, yMax])
+    .domain(])
     .range([height - margin - labelArea, margin]);
       
         // Create initial axis functions
