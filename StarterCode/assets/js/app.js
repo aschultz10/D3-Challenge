@@ -29,14 +29,17 @@ d3.select("body").append("div").attr("class", "tooltip").style("opacity", 0);
 
 
 // Retrieve data from the CSV file and execute everything below
-d3.csv("data.csv").then(function(err, ourdata) {
-    if (err) throw err;
-console.log(ourdata)
+d3.csv("data.csv", function(data) {
+    for (var i = 0; i < data.length; i++) {
+        console.log(data[i].poverty);
+        console.log(data[i].healthcare);
+    
+};
 
     // parse data
-    ourdata.forEach(function(data) {
-      data.poverty = +data.poverty;
-      data.healthcare = +data.healthcare;
+    data.forEach(d => {
+      d.poverty = +d.poverty;
+      d.healthcare = +d.healthcare;
     });
   
     // xLinearScale function above csv import
@@ -53,20 +56,20 @@ console.log(ourdata)
     var yaxismin;
     var yaxismax;
     
-    xaxismin = d3.min(ourdata, function(data) {
-        return data.healthcare;
+    xaxismin = d3.min(data, function(data) {
+        return d.healthcare;
     });
     
-    xaxismax = d3.max(ourdata, function(data) {
-        return data.healthcare;
+    xaxismax = d3.max(data, function(data) {
+        return d.healthcare;
     });
     
-    yaxismin = d3.min(ourdata, function(data) {
-        return data.poverty;
+    yaxismin = d3.min(data, function(data) {
+        return d.poverty;
     });
     
-    yaxismax = d3.max(ourdata, function(data) {
-        return data.poverty;
+    yaxismax = d3.max(data, function(data) {
+        return d.poverty;
     });
     
     xLinearScale.domain([xaxismin, xaxismax]);
@@ -85,7 +88,7 @@ console.log(ourdata)
     .call(yaxis);
 
     var circlesGroup = chartGroup.selectAll("circle")
-    .data(ourdata).enter().append("circle")
+    .data(data).enter().append("circle")
     .attr("cx", d => xLinearScale(d.healthcare +1.5))
     .attr("cy", d => yLinearScale(d.poverty +0.3))
     .attr("r", "12")
@@ -114,14 +117,14 @@ console.log(ourdata)
     chartGroup.append("text")
     .style("font-size", "12px")
     .selectAll("tspan")
-    .data(ourdata)
+    .data(data)
     .enter()
     .append("tspan")
         .attr("x", function(data) {
-            return xLinearScale(data.healthcare +1.3);
+            return xLinearScale(d.healthcare +1.3);
         })
         .attr("y", function(data) {
-            return yLinearScale(data.poverty +.1);
+            return yLinearScale(d.poverty +.1);
         })
         .text(function(data) {
             return data.abbr
