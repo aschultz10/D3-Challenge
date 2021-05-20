@@ -40,15 +40,6 @@ d3.csv("data.csv", function(data) {
       d.healthcare = +d.healthcare;
     });
   
-    // xLinearScale function above csv import
-    var xLinearScale = d3.scaleLinear().range([0, width]);
-    var yLinearScale = d3.scaleLinear().range([height, 0]);
-      
-  
-    // Create initial axis functions
-    var bottomAxis = d3.axisBottom(xLinearScale);
-    var leftAxis = d3.axisLeft(yLinearScale);
-    
     function xMinMax() {
         xMin = d3.min(data, function(d) {
           return parseFloat(d[curX]) * 0.90;});
@@ -63,8 +54,26 @@ d3.csv("data.csv", function(data) {
         });
     }
     
-    xLinearScale.domain([xMinMax]);
-    yLinearScale.domain([yMinMax]);
+    xMinMax();
+    yMinMax();
+
+        // xLinearScale function above csv import
+    var xLinearScale = d3
+    .scaleLinear()
+    .domain([xMin, xMax])
+    .range([margin + labelArea, width - margin]);
+    
+    var yLinearScale = d3
+    .scaleLinear()
+    .domain([yMin, yMax])
+    .range([height - margin - labelArea, margin]);
+      
+        // Create initial axis functions
+    var bottomAxis = d3.axisBottom(xLinearScale);
+    var leftAxis = d3.axisLeft(yLinearScale);
+    
+
+
     console.log(xMin);
     console.log(yMax);
 
