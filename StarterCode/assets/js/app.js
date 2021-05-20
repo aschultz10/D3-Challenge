@@ -33,8 +33,6 @@ d3.csv("data.csv", function(data) {
     for (var i = 0; i < data.length; i++) {
         console.log(data[i].poverty);
         console.log(data[i].healthcare);
-    
-
 
     // parse data
     data.forEach(d => {
@@ -48,45 +46,37 @@ d3.csv("data.csv", function(data) {
       
   
     // Create initial axis functions
-
-    var xaxis = d3.axisx(xLinearScale);
-    var yaxis = d3.axisy(yLinearScale);
-
-    var xaxismin;
-    var xaxismax;
-    var yaxismin;
-    var yaxismax;
+    var bottomAxis = d3.axisBottom(xLinearScale);
+    var leftAxis = d3.axisLeft(yLinearScale);
     
-    xaxismin = d3.min(data, function(data) {
-        return d.healthcare;
-    });
+    function xMinMax() {
+        xMin = d3.min(data, function(d) {
+          return parseFloat(d[curX]) * 0.90;});
+        xMax = d3.max(data, function(d) {
+          return parseFloat(d[curX]) * 1.10;});
+    }
+    function yMinMax() {
+        yMin = d3.min(data, function(d) {
+          return parseFloat(d[curY]) * 0.90; });
+        yMax = d3.max(data, function(d) {
+          return parseFloat(d[curY]) * 1.10;
+        });
+    }
     
-    xaxismax = d3.max(data, function(data) {
-        return d.healthcare;
-    });
-    
-    yaxismin = d3.min(data, function(data) {
-        return d.poverty;
-    });
-    
-    yaxismax = d3.max(data, function(data) {
-        return d.poverty;
-    });
-    
-    xLinearScale.domain([xaxismin, xaxismax]);
-    yLinearScale.domain([yaxismin, yaxismax]);
-    console.log(xaxismin);
-    console.log(yaxismax);
+    xLinearScale.domain([xMinMax]);
+    yLinearScale.domain([yMinMax]);
+    console.log(xMin);
+    console.log(yMax);
 
     // Append axes
     chartGroup
     .append("g")
     .attr("transform", `translate(0, ${height})`)
-    .call(xaxis);
+    .call(bottomAxis);
 
     chartGroup
     .append("g")
-    .call(yaxis);
+    .call(leftAxis);
 
     var circlesGroup = chartGroup.selectAll("circle")
     .data(data).enter().append("circle")
