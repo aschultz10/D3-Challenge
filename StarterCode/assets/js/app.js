@@ -34,7 +34,7 @@ d3.csv("data.csv", function(data) {
         console.log(data[i].poverty);
         console.log(data[i].healthcare);
     
-};
+
 
     // parse data
     data.forEach(d => {
@@ -48,6 +48,7 @@ d3.csv("data.csv", function(data) {
       
   
     // Create initial axis functions
+
     var xaxis = d3.axisx(xLinearScale);
     var yaxis = d3.axisy(yLinearScale);
 
@@ -142,4 +143,4 @@ d3.csv("data.csv", function(data) {
     .attr("transform", `translate(${width / 2}, ${height + margin.top + 30})`)
     .attr("class", "axisText")
     .text("In Poverty (%)");
-});
+}});
