@@ -16,7 +16,7 @@ var chartWidth = width - margin.left - margin.right;
 
 // create svg container
 var svg = d3
-    .select("body")
+    .select(".scatter")
     .append("svg")
     .attr("height", height)
     .attr("width", width);
@@ -24,8 +24,6 @@ var svg = d3
 // Append an SVG group
 var chartGroup = svg.append("g")
     .attr("transform", `translate(${margin.left}, ${margin.top})`);
-
-d3.select("body").append("div").attr("class", "tooltip").style("opacity", 0);
 
 
 // Retrieve data from the CSV file and execute everything below
@@ -53,7 +51,7 @@ d3.csv("data.csv", function(data) {
           return parseFloat(d[curY]) * 1.10;
         });
     }
-    
+
     xMinMax();
     yMinMax();
 
@@ -73,7 +71,6 @@ d3.csv("data.csv", function(data) {
     var leftAxis = d3.axisLeft(yLinearScale);
     
 
-
     console.log(xMin);
     console.log(yMax);
 
@@ -87,16 +84,17 @@ d3.csv("data.csv", function(data) {
     .append("g")
     .call(leftAxis);
 
+    // CREATE CIRCLES
+
     var circlesGroup = chartGroup.selectAll("circle")
-    .data(data).enter().append("circle")
-    .attr("cx", d => xLinearScale(d.healthcare +1.5))
-    .attr("cy", d => yLinearScale(d.poverty +0.3))
+    .data(data)
+    .enter()
+    .append("circle")
+    .attr("cx", d => xLinearScale(d.healthcare))
+    .attr("cy", d => yLinearScale(d.poverty))
     .attr("r", "12")
     .attr("fill", "blue")
-    .attr("opacity", .5)
-    .on("mouseout", function(data, index) {
-      toolTip.hide(data);
-    });
+    .attr("opacity", .5);
 
     // Make the tooltip
     var toolTip = d3.tip().attr("class", "tooltip")
